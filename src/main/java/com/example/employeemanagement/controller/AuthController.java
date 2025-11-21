@@ -2,6 +2,7 @@ package com.example.employeemanagement.controller;
 
 import com.example.employeemanagement.dto.AuthRequest;
 import com.example.employeemanagement.dto.AuthResponse;
+import com.example.employeemanagement.dto.UserDto;
 import com.example.employeemanagement.entities.User;
 import com.example.employeemanagement.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,7 +20,7 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@Valid @RequestBody User user) {
+    public ResponseEntity<UserDto> register(@Valid @RequestBody User user) {
         return ResponseEntity.ok(userService.register(user));
     }
 
