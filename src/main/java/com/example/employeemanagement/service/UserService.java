@@ -2,18 +2,15 @@ package com.example.employeemanagement.service;
 
 import com.example.employeemanagement.dto.AuthRequest;
 import com.example.employeemanagement.dto.AuthResponse;
-import com.example.employeemanagement.entities.Role;
+import com.example.employeemanagement.dto.UserDto;
 import com.example.employeemanagement.entities.User;
-import com.example.employeemanagement.exception.BadRequestException;
-import com.example.employeemanagement.exception.ResourceNotFoundException;
 import com.example.employeemanagement.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.AuthenticationException;
-
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import com.example.employeemanagement.entities.Role;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,40 +22,55 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
-    public User register(User user) {
-        if (userRepository.existsByUsername(user.getUsername())) {
-            throw new BadRequestException("Username is already taken");
-        }
-        if (userRepository.existsByEmail(user.getEmail())) {
-            throw new BadRequestException("Email is already in use");
-        }
+    public UserDto register(User user) {
+        if (userRepository.existsByEmail(user.getUsername()))
+            throw new RuntimeException("Username is already taken");
 
-        user.setRole(Role.ROLE_USER); // default role
+        if (userRepository.existsByEmail(user.getEmail()))
+            throw new RuntimeException("Email is already in use");
+
+        // force default role
+        user.setRole(Role.ROLE_USER);
+
+        // encode password
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        return userRepository.save(user);
+        User savedUser =userRepository.save(user);
+
+        return new UserDto(
+                savedUser.getId(),
+                savedUser.getUsername(),
+                savedUser.getEmail(),
+                savedUser.getRole(),
+                savedUser.getCreatedAt()
+        );
     }
 
-    public AuthResponse authenticate(AuthRequest authRequest) {
-        Authentication authentication;
-        try {
-            authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
-            );
-        } catch (AuthenticationException ex) {
-            throw new BadRequestException("Invalid username or password");
-        }
 
+    public AuthResponse authenticate(AuthRequest authRequest) {
+        // Authenticate the user
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        authRequest.getUsername(),
+                        authRequest.getPassword()
+                )
+        );
+
+        // Set authentication in context
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
+        // Get UserDetails from authentication
         org.springframework.security.core.userdetails.User principal =
                 (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
 
+        // Load the user from the database
         User user = userRepository.findByUsername(principal.getUsername())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
+        // Generate JWT token using the new method
         String jwt = jwtService.generateToken(principal, user.getRole().name());
 
         return new AuthResponse(jwt, "Bearer", user.getUsername(), user.getRole().name());
     }
+
 }

@@ -1,25 +1,17 @@
-package com.example.employeemanagement.entities;
+package com.example.employeemanagement.dto;
 
-import jakarta.persistence.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
-import io.swagger.v3.oas.annotations.media.Schema;
 
-@Entity
-@Table(name = "employees")
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@Schema(description = "Employee entity represents an employee record in the company.")
-public class Employee {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Schema(description = "Unique identifier of the employee.", example = "1")
-    private Long id;
+@RequiredArgsConstructor
+@Data
+public class EmployeeDto {
 
     @NotBlank
     @Schema(description = "Name of the employee.", example = "Chantal")

@@ -4,10 +4,14 @@ import com.example.employeemanagement.entities.Employee;
 import com.example.employeemanagement.service.EmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -17,13 +21,15 @@ import java.util.List;
 @Tag(name = "Employees", description = "Employee CRUD operations")
 @RestController
 @RequestMapping("/api/employees")
-@RequiredArgsConstructor
+//
+@AllArgsConstructor
+@Data
 public class EmployeeController {
 
+    @Autowired
     private final EmployeeService employeeService;
 
     @Operation(summary = "Create a new employee", description = "Only ADMIN can create an employee")
-    @RequestBody(description = "Employee details to create", required = true)
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<Employee> create(@Valid @RequestBody Employee employee) {
@@ -47,7 +53,6 @@ public class EmployeeController {
 
     @Operation(summary = "Update an employee", description = "Only ADMIN can update employee details")
     @Parameter(name = "id", description = "ID of the employee to update", required = true)
-    @RequestBody(description = "Updated employee details", required = true)
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Employee> update(@PathVariable Long id, @Valid @RequestBody Employee update) {
