@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Entity
@@ -33,4 +35,9 @@ public class Employee {
 
     @Schema(description = "Date when the employee was hired.", example = "2025-11-19")
     private LocalDate hireDate;
+
+    @ManyToMany(mappedBy = "employeesManaged")
+
+    private List<User> users;
+
 }

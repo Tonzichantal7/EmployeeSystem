@@ -1,6 +1,7 @@
 package com.example.employeemanagement.dto;
 
 import com.example.employeemanagement.entities.Role;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -13,9 +14,11 @@ import java.time.LocalDateTime;
 @Data
 public class UserDto {
     private Long id;
+    
+    @Schema(type = "string", format = "password", writeOnly = true)
     private String username;
     private String email;
     private Role role;
     private LocalDateTime createdAt;
-
 }
+

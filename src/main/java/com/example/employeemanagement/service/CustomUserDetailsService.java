@@ -3,9 +3,7 @@ package com.example.employeemanagement.service;
 import com.example.employeemanagement.entities.User;
 import com.example.employeemanagement.entities.Role;
 import com.example.employeemanagement.repository.UserRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
@@ -16,7 +14,6 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    @Autowired
     private final UserRepository userRepository;
 
     @Override
