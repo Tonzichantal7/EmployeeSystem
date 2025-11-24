@@ -2,6 +2,7 @@ package com.example.employeemanagement.controller;
 
 import com.example.employeemanagement.dto.AuthRequest;
 import com.example.employeemanagement.dto.AuthResponse;
+import com.example.employeemanagement.dto.RegisterRequest;
 import com.example.employeemanagement.dto.UserDto;
 import com.example.employeemanagement.entities.User;
 import com.example.employeemanagement.service.UserService;
@@ -20,12 +21,12 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<UserDto> register(@Valid @RequestBody User user) {
-        return ResponseEntity.ok(userService.register(user));
+    public ResponseEntity<UserDto> register(@Valid @RequestBody RegisterRequest request) {
+        return ResponseEntity.ok(userService.register(request));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest authRequest) {
-        return ResponseEntity.ok(userService.authenticate(authRequest));
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest request) {
+        return ResponseEntity.ok(userService.authenticate(request));
     }
 }

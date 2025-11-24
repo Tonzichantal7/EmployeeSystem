@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -44,6 +46,16 @@ public class User {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_employee",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "employee_id")
+    )
+    private List<Employee> employeesManaged = new ArrayList<>();
+
+
 
     @PrePersist
     protected void onCreate() {

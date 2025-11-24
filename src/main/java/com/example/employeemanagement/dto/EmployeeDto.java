@@ -1,28 +1,32 @@
 package com.example.employeemanagement.dto;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
+import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 
-@AllArgsConstructor
-@RequiredArgsConstructor
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class EmployeeDto {
 
-    @NotBlank
-    @Schema(description = "Name of the employee.", example = "Chantal")
+    private Long id;
+
+    @NotBlank(message = "Name is required")
+    @Size(max = 100, message = "Name must be at most 100 characters")
     private String name;
 
-    @Schema(description = "Position of the employee in the company.", example = "Developer")
+    @NotBlank(message = "Position is required")
+    @Size(max = 50, message = "Position must be at most 50 characters")
     private String position;
 
-    @Schema(description = "Department where the employee works.", example = "IT")
+    @NotBlank(message = "Department is required")
+    @Size(max = 50, message = "Department must be at most 50 characters")
     private String department;
 
-    @Schema(description = "Date when the employee was hired.", example = "2025-11-19")
+    @NotNull(message = "Hire date is required")
+    @PastOrPresent(message = "Hire date cannot be in the future")
     private LocalDate hireDate;
 }

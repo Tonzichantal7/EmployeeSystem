@@ -5,6 +5,7 @@ import com.example.employeemanagement.entities.User;
 import com.example.employeemanagement.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -18,13 +19,23 @@ public class DataInitializer {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Value("${ADMIN_USERNAME}")
+    private String adminUsername;
+
+    @Value("${ADMIN_EMAIL}")
+    private String adminEmail;
+
+    @Value("${ADMIN_PASSWORD}")
+    private String adminPassword;
+
     @PostConstruct
     public void init() {
-        if (userRepository.findByUsername("admin").isEmpty()) {
+        // Check if admin already exists
+        if (userRepository.findByUsername(adminUsername).isEmpty()) {
             User admin = User.builder()
-                    .username("admin")
-                    .email("admin@example.com")
-                    .password(passwordEncoder.encode("Admin123@"))
+                    .username(adminUsername)
+                    .email(adminEmail)
+                    .password(passwordEncoder.encode(adminPassword))
                     .role(Role.ROLE_ADMIN)
                     .build();
 
