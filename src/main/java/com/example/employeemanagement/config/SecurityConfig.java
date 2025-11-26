@@ -13,60 +13,67 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import java.util.Arrays;
 
 @Configuration
 @RequiredArgsConstructor
-@EnableMethodSecurity // Enables method-level security annotations like @PreAuthorize
+@EnableMethodSecurity
 public class SecurityConfig {
 
-    // JWT filter to intercept requests and validate tokens
     private final JwtAuthenticationFilter jwtAuthFilter;
 
-    /**
-     * Configure the security filter chain for HTTP requests.
-     * This sets up which endpoints are public, which require authentication, and adds JWT validation.
-     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // Disable CSRF because we are using JWT (stateless authentication)
+                // Enable CORS first, then disable CSRF
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
 
                 // Configure endpoint access rules
                 .authorizeHttpRequests(auth -> auth
-                        // Public endpoints: authentication and Swagger API docs
                         .requestMatchers(
-                                "/api/auth/**",         // Login, register
-                                "/v3/api-docs/**",      // OpenAPI docs
-                                "/swagger-ui/**"        // Swagger UI
+                                "/api/auth/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**"
                         ).permitAll()
-
-                        // Any other request must be authenticated
                         .anyRequest().authenticated()
                 )
 
-                // Stateless session: Spring Security will not store session information
+                // Stateless session
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                // Add JWT filter before the default authentication filter
+                // Add JWT filter
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
     /**
-     * Password encoder bean using BCrypt for hashing passwords.
-     * Always use a secure password encoder in production.
+     * CORS configuration to allow requests from your frontend
      */
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOriginPatterns(Arrays.asList("*")); // Allow all origins for now
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L); // 1 hour
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    /**
-     * AuthenticationManager bean used for authenticating users in login.
-     * Spring will automatically wire this with the UserDetailsService.
-     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
