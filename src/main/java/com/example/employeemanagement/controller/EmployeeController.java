@@ -44,7 +44,7 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeService.findById(id));
     }
 
-    @Operation(summary = "Promote an employee to admin and update admin_employee table")
+    @Operation(summary = "Promote an employee to admin")
     @PatchMapping("/{employeeId}/promote-admin")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> promoteEmployeeToAdmin(@PathVariable Long employeeId) {
