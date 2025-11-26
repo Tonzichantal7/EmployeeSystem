@@ -1,5 +1,6 @@
 server:
   port: 8080
+  forwrd-headers-strategy: framework
 
 spring:
   datasource:
