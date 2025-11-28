@@ -1,12 +1,29 @@
 package com.example.employeemanagement.config;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.models.*;
 import io.swagger.v3.oas.models.security.*;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.*;
 
+@OpenAPIDefinition(
+        servers = {
+                @Server(
+                        url = "http://localhost:8080",
+                        description = "Local Server"
+                ),
+                @Server(
+                        url = "https://easygoing-elegance-production.up.railway.app",
+                        description = "Production Server"
+                )
+        }
+)
+
 @Configuration
 public class SwaggerConfig {
+
 
     @Bean
     public OpenAPI customOpenAPI() {
