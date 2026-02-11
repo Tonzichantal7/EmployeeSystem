@@ -20,13 +20,13 @@ services:
       - key: APP_JWT_SECRET
         generateValue: true
       - key: APP_JWT_EXPIRATION
-        value: 86400000
+        value: "86400000"
       - key: ADMIN_USERNAME
         value: admin
       - key: ADMIN_EMAIL
         value: admin@example.com
       - key: ADMIN_PASSWORD
-        sync: false
+        value: ChangeMe123!
 
 databases:
   - name: employee-db
