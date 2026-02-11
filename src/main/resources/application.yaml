@@ -35,5 +35,5 @@ springdoc:
   api-docs:
     path: /v3/api-docs
   servers:
-    - url: https://easygoing-elegance-production.up.railway.app
+    - url: https://employee-management-api.onrender.com
       description: Production Server
