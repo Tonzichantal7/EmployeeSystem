@@ -13,7 +13,7 @@ import org.springframework.context.annotation.*;
                         description = "Local Server"
                 ),
                 @Server(
-                        url = "https://easygoing-elegance-production.up.railway.app",
+                        url = "https://employee-management-api-9rq0.onrender.com",
                         description = "Production Server"
                 )
         }

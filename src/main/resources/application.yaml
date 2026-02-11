@@ -35,5 +35,5 @@ springdoc:
   api-docs:
     path: /v3/api-docs
   servers:
-    - url: https://employee-management-api.onrender.com
+    - url: https://employee-management-api-9rq0.onrender.com
       description: Production Server
