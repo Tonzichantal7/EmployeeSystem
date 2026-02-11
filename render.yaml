@@ -5,12 +5,10 @@ services:
     plan: free
     dockerfilePath: ./dockerfile
     envVars:
-      - key: DATABASE_URL
+      - key: DB_URL
         fromDatabase:
           name: employee-db
           property: connectionString
-      - key: DB_URL
-        sync: false
       - key: DB_USERNAME
         fromDatabase:
           name: employee-db
