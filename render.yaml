@@ -5,7 +5,7 @@ services:
     plan: free
     dockerfilePath: ./dockerfile
     envVars:
-      - key: DATABASE_URL
+      - key: DATABASEgit_URL
         fromDatabase:
           name: employee-db
           property: connectionString
